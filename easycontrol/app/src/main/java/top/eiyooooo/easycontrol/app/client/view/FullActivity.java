@@ -113,9 +113,9 @@ public class FullActivity extends Activity implements SensorEventListener {
       clientView.controlPacket.sendRotateEvent();
       barViewTimer();
     });
-    fullActivity.buttonBack.setOnClickListener(v -> clientView.controlPacket.sendKeyEvent(4, 0, -1));
+    fullActivity.buttonBack.setOnClickListener(v -> clientView.controlPacket.sendKeyEvent(187, 0, -1)); //手动取反返回和最近任务
     fullActivity.buttonHome.setOnClickListener(v -> clientView.controlPacket.sendKeyEvent(3, 0, -1));
-    fullActivity.buttonSwitch.setOnClickListener(v -> clientView.controlPacket.sendKeyEvent(187, 0, -1));
+    fullActivity.buttonSwitch.setOnClickListener(v -> clientView.controlPacket.sendKeyEvent(4, 0, -1));
     fullActivity.buttonMore.setOnClickListener(v -> {
       changeBarView();
       barViewTimer();
