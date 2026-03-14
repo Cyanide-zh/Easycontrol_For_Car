@@ -19,14 +19,16 @@ jobs:
     - name: Decode Keystore
       run: |
         echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > release.jks
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
+
     #新增步骤
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v3
    
     - name: Build Release APK
-      run: ./gradlew assembleRelease
+      working-directory: ./easycontrol
+      run:  |
+        chmod +x gradlew
+        ./gradlew assembleRelease
       env:
         MY_KS_FILE: ../../release.jks # 对应下面 build.gradle 的路径
         MY_KS_PASS: ${{ secrets.KEYSTORE_PASSWORD }}
