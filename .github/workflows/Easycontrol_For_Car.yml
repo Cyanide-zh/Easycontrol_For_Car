@@ -15,19 +15,40 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
-
+    #新增步骤
+    - name: Decode Keystore
+      run: |
+        echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > release.jks
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+    #新增步骤
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v3
-
-    - name: Build the app
-      working-directory: ./easycontrol
-      run: |
-        chmod +x gradlew
-        ./gradlew :server:copyRelease --stacktrace
-        ./gradlew :app:assembleDebug --stacktrace
-        
-    - name: Upload APK
+   
+    - name: Build Release APK
+      run: ./gradlew assembleRelease
+      env:
+        MY_KS_FILE: ../../release.jks # 对应下面 build.gradle 的路径
+        MY_KS_PASS: ${{ secrets.KEYSTORE_PASSWORD }}
+        MY_ALIAS: ${{ secrets.KEY_ALIAS }}
+        MY_KEY_PASS: ${{ secrets.KEY_PASSWORD }}
+    
+    - name: Upload Release APK
       uses: actions/upload-artifact@v4
       with:
-        name: my-build-apk
-        path: ./easycontrol/app/build/outputs/apk/debug/*.apk
+        name: Easycontrol_For_Car-Release
+        path: app/build/outputs/apk/release/app-release.apk
+      
+
+    #- name: Build the debug app
+     # working-directory: ./easycontrol
+     # run: |
+      #  chmod +x gradlew
+      #  ./gradlew :server:copyRelease --stacktrace
+       # ./gradlew :app:assembleDebug --stacktrace
+        
+   # - name: Upload debug APK
+ #     uses: actions/upload-artifact@v4
+#      with:
+    #    name: my-build-apk
+    #    path: ./easycontrol/app/build/outputs/apk/debug/*.apk
