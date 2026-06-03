@@ -22,7 +22,7 @@ jobs:
     #  将 Base64 恢复为 Keystore 文件
     - name: Decode Keystore
       working-directory: ./easycontrol/app
-      run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > keystore.jks
+      run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > keystore.jks ; find ./  -name "keystore.jks" |xargs ls -lh  
 
     - name: Build the app
       working-directory: ./easycontrol
@@ -35,6 +35,7 @@ jobs:
         chmod +x gradlew
         ./gradlew :server:copyRelease --stacktrace
         ./gradlew :app:assembleRelease --stacktrace
+        find ./easycontrol/app/build/outputs/  -name "*.apk" |xargs ls -lh 
         
     - name: Upload APK
       uses: actions/upload-artifact@v4
